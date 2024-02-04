@@ -93,25 +93,29 @@ public class PenguinController : MonoBehaviour
             LerpToTarget(selectedPenguin.transform, targetTilePosition, timeToReachTarget);
         }
 
-        if(verticalInput == 0){
-            if(horizontalInput > 0){
+        if(horizontalInput > 0){
+            if(verticalInput == 0){
                 eggDirection = new Vector3(1, 0, 0);
-                if(Input.GetKeyDown(KeyCode.Tab)){
-                    GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Right);
-                    HandleChangePlayer(closestPenguin);
-                }
-            }else if(horizontalInput < 0){
+            }
+            if(Input.GetKeyDown(KeyCode.Tab)){
+                GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Right);
+                HandleChangePlayer(closestPenguin);
+            }
+        }else if(horizontalInput < 0){
+            if(verticalInput == 0){
                 eggDirection = new Vector3(-1, 0, 0);
-                if(Input.GetKeyDown(KeyCode.Tab)){
-                    GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Left);
-                    HandleChangePlayer(closestPenguin);
-                }
-            }else{
+            }
+            if(Input.GetKeyDown(KeyCode.Tab)){
+                GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Left);
+                HandleChangePlayer(closestPenguin);
+            }
+        }else{
+            if(verticalInput == 0){
                 eggDirection = new Vector3(0, 1, 0);
-                if(Input.GetKeyDown(KeyCode.Tab)){
-                    GameObject closestPenguin = GetClosestPenguin(ClosestDirection.None);
-                    HandleChangePlayer(closestPenguin);
-                }
+            }
+            if(Input.GetKeyDown(KeyCode.Tab)){
+                GameObject closestPenguin = GetClosestPenguin(ClosestDirection.None);
+                HandleChangePlayer(closestPenguin);
             }
         }
         
@@ -188,7 +192,9 @@ public class PenguinController : MonoBehaviour
 
     void ThrowEgg(){
         GameObject eggObject = Instantiate(eggPrefab, eggPenguin.transform.position, Quaternion.identity);
-        eggObject.GetComponent<Egg>().SetFromPenguin(eggPenguin);
+        Egg egg = eggObject.GetComponent<Egg>();
+        egg.SetFromPenguin(eggPenguin);
+        egg.penguinController = this;
         eggPenguin.GetComponent<Penguin>().SetEggFalse();
 
         float angle = Mathf.Atan2(eggDirection.y, eggDirection.x);
@@ -198,21 +204,25 @@ public class PenguinController : MonoBehaviour
         eggPenguin = null;
     }
 
-    void HandleChangePlayer(GameObject closestPenguin){
+    void HandleChangePlayer(GameObject tochangePenguin){
         selectedPenguin.transform.SetParent(transform);
         selectedPenguin.GetComponent<Penguin>().SetSelectedFalse();
-        closestPenguin.GetComponent<Penguin>().SetSelectedTrue();
-        closestPenguin.transform.SetParent(null);
-        selectedPenguin = closestPenguin;
+        tochangePenguin.GetComponent<Penguin>().SetSelectedTrue();
+        tochangePenguin.transform.SetParent(null);
+        selectedPenguin = tochangePenguin;
     }
 
-    public static void SetEggPenguin(GameObject penguin){
+    public void SetEggPenguin(GameObject penguin){
         eggPenguin = penguin;
         eggPenguin.GetComponent<Penguin>().SetEggTrue();
     }
 
-    public static GameObject GetEggPenguin(){
+    public GameObject GetEggPenguin(){
         return eggPenguin;
+    }
+
+    public void SetSelectedPenguin(GameObject penguin){
+        HandleChangePlayer(penguin);
     }
 
 }

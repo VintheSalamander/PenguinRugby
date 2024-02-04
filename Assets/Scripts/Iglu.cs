@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Iglu : MonoBehaviour
 {
+    public PenguinController penguinController;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +31,7 @@ public class Iglu : MonoBehaviour
     }
 
     void HandlePenguinCollision(Collision2D collision){
-        if(collision.gameObject == PenguinController.GetEggPenguin()){
+        if(collision.gameObject == penguinController.GetEggPenguin()){
             Debug.Log("Win");
         }
     }

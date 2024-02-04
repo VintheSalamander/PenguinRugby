@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Egg : MonoBehaviour
 {
+    public PenguinController penguinController;
     private GameObject fromPenguin;
     private Collider2D eggCollider;
     private bool ignoreFrom;
@@ -41,11 +42,12 @@ public class Egg : MonoBehaviour
     void HandlePenguinCollision(Collision2D collision){
         if(collision.gameObject != fromPenguin){
             Destroy(gameObject);
-            PenguinController.SetEggPenguin(collision.gameObject);
+            penguinController.SetEggPenguin(collision.gameObject);
+            
         }else{
             if(ignoreFrom){
                 Destroy(gameObject);
-                PenguinController.SetEggPenguin(collision.gameObject);
+                penguinController.SetEggPenguin(collision.gameObject);
             }
         }
     }

@@ -171,3 +171,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0177351ecbeed48b49344dd6e2cae4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  penguinController: {fileID: 0}
