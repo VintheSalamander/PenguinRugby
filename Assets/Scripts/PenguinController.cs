@@ -7,15 +7,13 @@ using UnityEngine.Tilemaps;
 
 public class PenguinController : MonoBehaviour
 {
-    public enum ClosestDirection
-    {
+    public enum ClosestDirection{
         Left,
         Right,
         None
     }
 
     private Vector3Int direction;
-    private Vector3 eggDirection;
     public Tilemap tilemap;
     public float playerSpeed = 2.0f;
     public float penguinsSpeed = 2.0f;
@@ -38,7 +36,6 @@ public class PenguinController : MonoBehaviour
         Penguin startPenguin = startingPenguin.GetComponent<Penguin>();
         startPenguin.SetEggTrue();
         startPenguin.SetSelectedTrue();
-        eggDirection = new Vector3(0, 1, 0);
     }
 
     // Update is called once per frame
@@ -48,6 +45,7 @@ public class PenguinController : MonoBehaviour
         Vector3Int selecPenTilePosition = tilemap.WorldToCell(selecPenWorldPosition);
         float verticalInput= Input.GetAxis("Vertical");
         float horizontalInput = Input.GetAxis("Horizontal");
+        Vector3 eggDirection = Vector3.zero;
         if(isMoving == false && verticalInput != 0)
         {
             isMoving = true;
@@ -97,7 +95,7 @@ public class PenguinController : MonoBehaviour
             if(verticalInput == 0){
                 eggDirection = new Vector3(1, 0, 0);
             }
-            if(Input.GetKeyDown(KeyCode.Tab)){
+            if(Input.GetKeyDown(KeyCode.L)){
                 GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Right);
                 HandleChangePlayer(closestPenguin);
             }
@@ -105,7 +103,7 @@ public class PenguinController : MonoBehaviour
             if(verticalInput == 0){
                 eggDirection = new Vector3(-1, 0, 0);
             }
-            if(Input.GetKeyDown(KeyCode.Tab)){
+            if(Input.GetKeyDown(KeyCode.L)){
                 GameObject closestPenguin = GetClosestPenguin(ClosestDirection.Left);
                 HandleChangePlayer(closestPenguin);
             }
@@ -113,13 +111,17 @@ public class PenguinController : MonoBehaviour
             if(verticalInput == 0){
                 eggDirection = new Vector3(0, 1, 0);
             }
-            if(Input.GetKeyDown(KeyCode.Tab)){
+            if(Input.GetKeyDown(KeyCode.L)){
+                Debug.Log("check");
+                if(eggPenguin != null && selectedPenguin != eggPenguin){
+                    HandleChangePlayer(eggPenguin);
+                }
                 GameObject closestPenguin = GetClosestPenguin(ClosestDirection.None);
                 HandleChangePlayer(closestPenguin);
             }
         }
         
-        if(Input.GetKey(KeyCode.Alpha1)){
+        if(Input.GetKey(KeyCode.O)){
             if(verticalInput != 0){
                 Vector3 penguinsWorldPosition = transform.position;
                 Vector3Int penguinsTilePosition = tilemap.WorldToCell(penguinsWorldPosition);
@@ -136,16 +138,25 @@ public class PenguinController : MonoBehaviour
         }
         
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             if(eggPenguin){
-                ThrowEgg();
+                if(eggDirection == Vector3.zero){
+                    eggDirection = new Vector3(0, 1, 0);
+                }
+                float angle;
+                if(selectedPenguin == eggPenguin){
+                    angle = Mathf.Atan2(eggDirection.y, eggDirection.x);
+                }else{
+                    Vector3 eggtoselectedDirection = selectedPenguin.transform.position - eggPenguin.transform.position;
+                    angle = Mathf.Atan2(eggtoselectedDirection.y, eggtoselectedDirection.x);
+                }
+                ThrowEgg(angle, eggSpeed);
             }
         }
     }
 
-    GameObject GetClosestPenguin(ClosestDirection closDirection)
-    {
+    GameObject GetClosestPenguin(ClosestDirection closDirection){
         GameObject closestChild = null;
         GameObject directionChild = null;
         float closestDistance = float.MaxValue;
@@ -190,17 +201,15 @@ public class PenguinController : MonoBehaviour
         isMoving = false;
     }
 
-    void ThrowEgg(){
+    public void ThrowEgg(float angle, float throwSpeed){
         GameObject eggObject = Instantiate(eggPrefab, eggPenguin.transform.position, Quaternion.identity);
         Egg egg = eggObject.GetComponent<Egg>();
         egg.SetFromPenguin(eggPenguin);
         egg.penguinController = this;
         eggPenguin.GetComponent<Penguin>().SetEggFalse();
-
-        float angle = Mathf.Atan2(eggDirection.y, eggDirection.x);
-
+        
         Rigidbody2D rb = eggObject.GetComponent<Rigidbody2D>();
-        rb.AddForce(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * eggSpeed, ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * throwSpeed, ForceMode2D.Impulse);
         eggPenguin = null;
     }
 
@@ -217,7 +226,7 @@ public class PenguinController : MonoBehaviour
         eggPenguin.GetComponent<Penguin>().SetEggTrue();
     }
 
-    public GameObject GetEggPenguin(){
+    public static GameObject GetEggPenguin(){
         return eggPenguin;
     }
 

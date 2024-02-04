@@ -136,7 +136,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -146,7 +146,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0143132955, y: -0.012268588}
+  m_Offset: {x: 0.0004987046, y: -0.0027046502}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0.5, z: 0, w: 0.5}
     pivot: {x: 0.5, y: 0.5}
@@ -157,7 +157,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.17800891, y: 0.20663548}
+  m_Size: {x: 0.19288616, y: 0.22576335}
   m_EdgeRadius: 0
 --- !u!114 &-3327309593082169016
 MonoBehaviour:
@@ -172,3 +172,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   penguinController: {fileID: 0}
+  sealPushForce: 4.5

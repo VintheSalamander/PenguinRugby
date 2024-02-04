@@ -6,13 +6,14 @@ using UnityEngine;
 public class Egg : MonoBehaviour
 {
     public PenguinController penguinController;
+    public float sealPushForce;
     private GameObject fromPenguin;
-    private Collider2D eggCollider;
+    private Rigidbody2D rb;
     private bool ignoreFrom;
     // Start is called before the first frame update
     void Start()
     {
-        eggCollider = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
         ignoreFrom = false;
         StartCoroutine(TrueIgnoreFrom());
     }
@@ -28,8 +29,11 @@ public class Egg : MonoBehaviour
     }
     
     void OnCollisionEnter2D(Collision2D collision){
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Penguins")){
+        LayerMask collisionLayer = collision.gameObject.layer;
+        if (collisionLayer == LayerMask.NameToLayer("Penguins")){
             HandlePenguinCollision(collision);
+        }else if(collisionLayer == LayerMask.NameToLayer("Seals")){
+            HandleSealCollision(collision);
         }
     }
 
@@ -50,6 +54,14 @@ public class Egg : MonoBehaviour
                 penguinController.SetEggPenguin(collision.gameObject);
             }
         }
+    }
+    
+    void HandleSealCollision(Collision2D collision){
+        Vector3 eggtoSealDirection = transform.position - collision.transform.position;
+        float angle = Mathf.Atan2(eggtoSealDirection.y, eggtoSealDirection.x);
+
+        rb.AddForce(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * sealPushForce, ForceMode2D.Impulse);
+        EggLifeController.EggDown();
     }
     
     IEnumerator TrueIgnoreFrom(){
