@@ -41,11 +41,11 @@ public class Egg : MonoBehaviour
     void HandlePenguinCollision(Collision2D collision){
         if(collision.gameObject != fromPenguin){
             Destroy(gameObject);
-            PlayerController.SetEggPenguin(collision.gameObject);
+            PenguinController.SetEggPenguin(collision.gameObject);
         }else{
             if(ignoreFrom){
                 Destroy(gameObject);
-                PlayerController.SetEggPenguin(collision.gameObject);
+                PenguinController.SetEggPenguin(collision.gameObject);
             }
         }
     }
