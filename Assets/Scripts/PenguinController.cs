@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
 public class PenguinController : MonoBehaviour
@@ -13,29 +14,43 @@ public class PenguinController : MonoBehaviour
         None
     }
 
-    private Vector3Int direction;
+    
     public Tilemap tilemap;
-    public float playerSpeed = 2.0f;
-    public float penguinsSpeed = 2.0f;
+    public float normalSpeed = 2.0f;
+    public float slideSpeed = 2.0f;
+    private float currentSpeed;
     public GameObject startingPenguin;
-
     public float eggSpeed = 2.0f;
-    private static GameObject selectedPenguin;
-    private static GameObject eggPenguin;
-    private bool isMoving;
     public GameObject eggPrefab;
     public float throwForce = 10f;
+
+    public float maxStamina, currentStamina;
+    public float speedStamina;
+    public float recoverSpeedStamina;
+    public Stamina staminaBar;
+    public static bool isWater;
+
+    private Vector3Int direction;
+    private GameObject selectedPenguin;
+    private GameObject eggPenguin;
+    private bool isMoving;
 
     // Start is called before the first frame update
     void Start()
     {
+        isWater = false;
         isMoving = false;
+        currentSpeed = normalSpeed;
+
         selectedPenguin = startingPenguin;
         selectedPenguin.transform.SetParent(null);
         eggPenguin = startingPenguin;
         Penguin startPenguin = startingPenguin.GetComponent<Penguin>();
         startPenguin.SetEggTrue();
         startPenguin.SetSelectedTrue();
+
+        currentStamina = maxStamina;
+        staminaBar.SetMaxStamina(maxStamina);
     }
 
     // Update is called once per frame
@@ -87,7 +102,7 @@ public class PenguinController : MonoBehaviour
             Vector3 targetTilePosition = tilemap.GetCellCenterWorld(selecPenTilePosition + direction);
             eggDirection = targetTilePosition - selectedPenguin.transform.position;
             float distanceToTarget = Vector3.Distance(selectedPenguin.transform.position, targetTilePosition);
-            float timeToReachTarget = distanceToTarget / playerSpeed;
+            float timeToReachTarget = distanceToTarget / currentSpeed;
             LerpToTarget(selectedPenguin.transform, targetTilePosition, timeToReachTarget);
         }
 
@@ -110,31 +125,38 @@ public class PenguinController : MonoBehaviour
         }else{
             if(verticalInput == 0){
                 eggDirection = new Vector3(0, 1, 0);
+                if(isWater){
+                    currentStamina += recoverSpeedStamina;
+                    if(currentStamina > maxStamina){
+                        currentStamina = maxStamina;
+                        currentSpeed = normalSpeed;
+                    }
+                    staminaBar.SetStamina(currentStamina);
+                }
             }
             if(Input.GetKeyDown(KeyCode.L)){
-                Debug.Log("check");
                 if(eggPenguin != null && selectedPenguin != eggPenguin){
                     HandleChangePlayer(eggPenguin);
+                }else{
+                    GameObject closestPenguin = GetClosestPenguin(ClosestDirection.None);
+                    HandleChangePlayer(closestPenguin);
                 }
-                GameObject closestPenguin = GetClosestPenguin(ClosestDirection.None);
-                HandleChangePlayer(closestPenguin);
             }
         }
         
         if(Input.GetKey(KeyCode.O)){
-            if(verticalInput != 0){
-                Vector3 penguinsWorldPosition = transform.position;
-                Vector3Int penguinsTilePosition = tilemap.WorldToCell(penguinsWorldPosition);
-                if(verticalInput > 0){
-                    direction = new Vector3Int(1, 0, 0);
-                }else if(verticalInput < 0){
-                    direction = new Vector3Int(-1, 0, 0);
-                }
-                Vector3 targetTilePosition = tilemap.GetCellCenterWorld(penguinsTilePosition + direction);
-                float distanceToTarget = Vector3.Distance(transform.position, targetTilePosition);
-                float timeToReachTarget = distanceToTarget / penguinsSpeed;
-                LerpToTarget(transform, targetTilePosition, timeToReachTarget);
+            if(currentStamina < 0){
+                currentStamina = 0;
+                currentSpeed = normalSpeed;
+            }else if(currentStamina > 0){
+                currentStamina -= speedStamina;
+                currentSpeed = slideSpeed;
+                staminaBar.SetStamina(currentStamina);
             }
+        }
+
+        if(Input.GetKeyUp(KeyCode.O)){
+            currentSpeed = normalSpeed;
         }
         
 
@@ -226,8 +248,12 @@ public class PenguinController : MonoBehaviour
         eggPenguin.GetComponent<Penguin>().SetEggTrue();
     }
 
-    public static GameObject GetEggPenguin(){
+    public GameObject GetEggPenguin(){
         return eggPenguin;
+    }
+
+    public GameObject GetSelectedPenguin(){
+        return selectedPenguin;
     }
 
     public void SetSelectedPenguin(GameObject penguin){

@@ -57,10 +57,8 @@ public class Egg : MonoBehaviour
     }
     
     void HandleSealCollision(Collision2D collision){
-        Vector3 eggtoSealDirection = transform.position - collision.transform.position;
-        float angle = Mathf.Atan2(eggtoSealDirection.y, eggtoSealDirection.x);
-
-        rb.AddForce(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * sealPushForce, ForceMode2D.Impulse);
+        penguinController.SetEggPenguin(penguinController.GetSelectedPenguin());
+        Debug.Log("1 EGG DOWN");
         EggLifeController.EggDown();
     }
     

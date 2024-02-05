@@ -10,7 +10,7 @@ public class Seal : MonoBehaviour
     public float penForceDuration;
     Animator animator;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
     }
@@ -43,7 +43,7 @@ public class Seal : MonoBehaviour
             Rigidbody2D penguinRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
             penguinRigidbody.velocity = new Vector2(Mathf.Cos(pushAngle), Mathf.Sin(pushAngle)) * penguinForce;
             StartCoroutine(PenguinPushForce(penguinRigidbody));
-            if(collision.gameObject == PenguinController.GetEggPenguin()){
+            if(collision.gameObject == penguinController.GetEggPenguin()){
                 penguinController.ThrowEgg(pushAngleEgg, eggForce);
             }
         }
