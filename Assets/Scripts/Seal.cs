@@ -7,6 +7,7 @@ public class Seal : MonoBehaviour
     public PenguinController penguinController;
     public float penguinForce;
     public float eggForce;
+    public float penForceDuration;
     Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -17,7 +18,6 @@ public class Seal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void SetSelectedTrue(){
@@ -34,12 +34,31 @@ public class Seal : MonoBehaviour
             Vector2 pushDirection = collision.transform.position - transform.position;
             float pushAngle = Mathf.Atan2(pushDirection.y, pushDirection.x);
 
+            float minOffset = Mathf.Deg2Rad * 5f;
+            float maxOffset = Mathf.Deg2Rad * 45f;
+            float randomOffset = Random.Range(minOffset, maxOffset);
+
+            float pushAngleEgg = pushAngle + randomOffset;
+
             Rigidbody2D penguinRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
-            penguinRigidbody.AddForce(new Vector2(Mathf.Cos(pushAngle), Mathf.Sin(pushAngle)) * penguinForce, ForceMode2D.Impulse);
+            penguinRigidbody.velocity = new Vector2(Mathf.Cos(pushAngle), Mathf.Sin(pushAngle)) * penguinForce;
+            StartCoroutine(PenguinPushForce(penguinRigidbody));
             if(collision.gameObject == PenguinController.GetEggPenguin()){
-                penguinController.ThrowEgg(pushAngle, eggForce);
-                EggLifeController.EggDown();
+                penguinController.ThrowEgg(pushAngleEgg, eggForce);
             }
         }
+    }
+
+    public void SetSealVariables(PenguinController penControl, float sealToPenguinForce, float sealToEggForce, float penFDur){
+        penguinController = penControl;
+        penguinForce = sealToPenguinForce;
+        eggForce = sealToEggForce;
+        penForceDuration = penFDur;
+    }
+
+    IEnumerator PenguinPushForce(Rigidbody2D penguinRigidbody){
+        yield return new WaitForSeconds(penForceDuration);
+        penguinRigidbody.velocity = Vector2.zero;
+        yield return null;
     }
 }

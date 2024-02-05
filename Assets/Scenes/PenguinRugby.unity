@@ -6199,9 +6199,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aabd0a6a2dc7e42b20822cd2cee446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguinController: {fileID: 1570320187}
-  penguinForce: 3
-  eggForce: 5
+  penguinController: {fileID: 0}
+  penguinForce: 0
+  eggForce: 0
+  penForceDuration: 0
 --- !u!95 &310264481
 Animator:
   serializedVersion: 5
@@ -9785,9 +9786,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aabd0a6a2dc7e42b20822cd2cee446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguinController: {fileID: 1570320187}
-  penguinForce: 3
-  eggForce: 5
+  penguinController: {fileID: 0}
+  penguinForce: 0
+  eggForce: 0
+  penForceDuration: 0
 --- !u!95 &372311362
 Animator:
   serializedVersion: 5
@@ -10505,9 +10507,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 318495183}
-  playerSpeed: 2
-  SealsSpeed: 2
+  selectedSealSpeed: 2
+  sealsSpeed: 2
+  sealToPenguinForce: 4
+  sealToPenForceDuration: 1
+  sealToEggForce: 3.5
   startingSeal: {fileID: 1272983987}
+  penguinController: {fileID: 1570320187}
 --- !u!1 &1272983987
 GameObject:
   m_ObjectHideFlags: 0
@@ -10701,9 +10707,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aabd0a6a2dc7e42b20822cd2cee446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguinController: {fileID: 1570320187}
-  penguinForce: 3
-  eggForce: 5
+  penguinController: {fileID: 0}
+  penguinForce: 0
+  eggForce: 0
+  penForceDuration: 0
 --- !u!1 &1309517128
 GameObject:
   m_ObjectHideFlags: 0

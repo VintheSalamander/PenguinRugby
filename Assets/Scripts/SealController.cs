@@ -15,9 +15,13 @@ public class SealController : MonoBehaviour
 
     private Vector3Int direction;
     public Tilemap tilemap;
-    public float playerSpeed = 2.0f;
-    public float SealsSpeed = 2.0f;
+    public float selectedSealSpeed = 2.0f;
+    public float sealsSpeed = 2.0f;
+    public float sealToPenguinForce;
+    public float sealToPenForceDuration;
+    public float sealToEggForce;
     public GameObject startingSeal;
+    public PenguinController penguinController;
     private static GameObject selectedSeal;
     private bool isMoving;
 
@@ -25,9 +29,19 @@ public class SealController : MonoBehaviour
     void Start()
     {
         isMoving = false;
+        Seal selectedSealComp = null;
+        for (int i = 0; i < transform.childCount; i++){
+            GameObject childSeal = transform.GetChild(i).gameObject;
+            Seal childSealComp = childSeal.GetComponent<Seal>();
+            childSealComp.SetSealVariables(penguinController, sealToPenguinForce, sealToEggForce, sealToPenForceDuration);
+            if(childSeal == startingSeal){
+                selectedSealComp = childSealComp;
+                
+            }
+        }
         selectedSeal = startingSeal;
         selectedSeal.transform.SetParent(null);
-        selectedSeal.GetComponent<Seal>().SetSelectedTrue();
+        selectedSealComp.SetSelectedTrue();
     }
 
     // Update is called once per frame
@@ -76,7 +90,7 @@ public class SealController : MonoBehaviour
             }
             Vector3 targetTilePosition = tilemap.GetCellCenterWorld(selecSealTilePosition + direction);
             float distanceToTarget = Vector3.Distance(selectedSeal.transform.position, targetTilePosition);
-            float timeToReachTarget = distanceToTarget / playerSpeed;
+            float timeToReachTarget = distanceToTarget / selectedSealSpeed;
             LerpToTarget(selectedSeal.transform, targetTilePosition, timeToReachTarget);
         }
 
@@ -108,7 +122,7 @@ public class SealController : MonoBehaviour
                 }
                 Vector3 targetTilePosition = tilemap.GetCellCenterWorld(SealsTilePosition + direction);
                 float distanceToTarget = Vector3.Distance(transform.position, targetTilePosition);
-                float timeToReachTarget = distanceToTarget / SealsSpeed;
+                float timeToReachTarget = distanceToTarget / sealsSpeed;
                 LerpToTarget(transform, targetTilePosition, timeToReachTarget);
             }
         }
