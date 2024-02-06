@@ -55,7 +55,6 @@ public class Egg : MonoBehaviour
     
     void HandleSealCollision(){
         penguinController.SetEggPenguin(penguinController.GetFurthestPenguin(transform.position));
-        Debug.Log("1 EGG DOWN");
         EggLifeController.EggDown();
         Destroy(gameObject);
     }

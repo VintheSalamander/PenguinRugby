@@ -20,11 +20,13 @@ public class EggLifeController : MonoBehaviour
     {
         if(HP == 2){
             Destroy(eggLife1);
+            Debug.Log("2 EGG LEFT");
         }else if(HP == 1){
             Destroy(eggLife2);
+            Debug.Log("1 EGG LEFT");
         }else if(HP == 0){
             Destroy(eggLife3);
-            Debug.Log("Penguins Lost");
+            Debug.Log("SEALS WIN");
         }
     }
 

@@ -32,7 +32,7 @@ public class Iglu : MonoBehaviour
 
     void HandlePenguinCollision(Collision2D collision){
         if(collision.gameObject == penguinController.GetEggPenguin()){
-            Debug.Log("Win");
+            Debug.Log("PENGUINS WIN");
         }
     }
 }
