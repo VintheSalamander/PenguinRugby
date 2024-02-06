@@ -110,7 +110,7 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 255
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -172,7 +172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aabd0a6a2dc7e42b20822cd2cee446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguinController: {fileID: 0}
 --- !u!95 &3178026391384850197
 Animator:
   serializedVersion: 5
