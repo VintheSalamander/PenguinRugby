@@ -8,12 +8,10 @@ public class Egg : MonoBehaviour
     public PenguinController penguinController;
     public float sealPushForce;
     private GameObject fromPenguin;
-    private Rigidbody2D rb;
     private bool ignoreFrom;
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         ignoreFrom = false;
         StartCoroutine(TrueIgnoreFrom());
     }
@@ -33,7 +31,7 @@ public class Egg : MonoBehaviour
         if (collisionLayer == LayerMask.NameToLayer("Penguins")){
             HandlePenguinCollision(collision);
         }else if(collisionLayer == LayerMask.NameToLayer("Seals")){
-            HandleSealCollision(collision);
+            HandleSealCollision();
         }
     }
 
@@ -45,21 +43,21 @@ public class Egg : MonoBehaviour
 
     void HandlePenguinCollision(Collision2D collision){
         if(collision.gameObject != fromPenguin){
-            Destroy(gameObject);
             penguinController.SetEggPenguin(collision.gameObject);
-            
+            Destroy(gameObject);
         }else{
             if(ignoreFrom){
-                Destroy(gameObject);
                 penguinController.SetEggPenguin(collision.gameObject);
+                Destroy(gameObject);
             }
         }
     }
     
-    void HandleSealCollision(Collision2D collision){
-        penguinController.SetEggPenguin(penguinController.GetSelectedPenguin());
+    void HandleSealCollision(){
+        penguinController.SetEggPenguin(penguinController.GetFurthestPenguin(transform.position));
         Debug.Log("1 EGG DOWN");
         EggLifeController.EggDown();
+        Destroy(gameObject);
     }
     
     IEnumerator TrueIgnoreFrom(){

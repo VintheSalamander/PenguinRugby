@@ -35,7 +35,7 @@ public class Penguin : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision){
         LayerMask collisionLayer = collision.gameObject.layer;
-        if (collisionLayer == LayerMask.NameToLayer("Water")){
+        if (collisionLayer == LayerMask.NameToLayer("Water") && animator.GetBool("isSelected")){
             PenguinController.isWater = true;
         }
     }

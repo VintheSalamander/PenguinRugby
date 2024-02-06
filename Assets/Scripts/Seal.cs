@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Seal : MonoBehaviour
 {
-    public PenguinController penguinController;
-    public float penguinForce;
-    public float eggForce;
-    public float penForceDuration;
+    private PenguinController penguinController;
+    private float penguinForce;
+    private float eggForce;
+    private float penForceDuration;
     Animator animator;
     // Start is called before the first frame update
     void Awake()

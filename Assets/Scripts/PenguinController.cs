@@ -241,6 +241,7 @@ public class PenguinController : MonoBehaviour
         tochangePenguin.GetComponent<Penguin>().SetSelectedTrue();
         tochangePenguin.transform.SetParent(null);
         selectedPenguin = tochangePenguin;
+        isWater = false;
     }
 
     public void SetEggPenguin(GameObject penguin){
@@ -258,6 +259,27 @@ public class PenguinController : MonoBehaviour
 
     public void SetSelectedPenguin(GameObject penguin){
         HandleChangePlayer(penguin);
+    }
+
+    public GameObject GetFurthestPenguin(Vector3 position){
+        GameObject furthestPenguin = null;
+        float furthestDistance = 0f;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            
+            Transform child = transform.GetChild(i);
+            float distance = Vector3.Distance(child.position, position);
+            if(distance > furthestDistance){
+                furthestDistance = distance;
+                furthestPenguin = child.gameObject;
+            }
+        }
+        float selecDistance = Vector3.Distance(selectedPenguin.transform.position, position);
+        if(selecDistance > furthestDistance){
+            furthestPenguin = selectedPenguin.gameObject;
+        }
+
+        return furthestPenguin;
     }
 
 }
