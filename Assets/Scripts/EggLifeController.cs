@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class EggLifeController : MonoBehaviour
@@ -5,6 +6,7 @@ public class EggLifeController : MonoBehaviour
     public GameObject eggLife1;
     public GameObject eggLife2;
     public GameObject eggLife3;
+    public TextMeshProUGUI text;
 
     private static int HP;
     // Start is called before the first frame update
@@ -18,13 +20,11 @@ public class EggLifeController : MonoBehaviour
     {
         if(HP == 2){
             Destroy(eggLife1);
-            Debug.Log("2 EGG LEFT");
         }else if(HP == 1){
             Destroy(eggLife2);
-            Debug.Log("1 EGG LEFT");
         }else if(HP == 0){
             Destroy(eggLife3);
-            Debug.Log("SEALS WIN");
+            text.text = "SEALS WIN";
         }
     }
 
